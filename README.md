@@ -241,10 +241,45 @@ Maximum Value:  98.00
   
   ---
 ### 9. Create a chart which shows the average number of passengers each hour of the day. (X axis should have 24 hours)
-#### Code to calculate average number of passengers each hour of the day:
+#### Code to calculate the average number of passengers each hour of the day:
 ```python
+from datetime import datetime
+hour_pass={}
+for i in range(24):
+    hour_pass[i]=[]
 
+for row in range(1,len(data)):
+    time=datetime.strptime(data[row][5],'%Y-%m-%d %H:%M:%S').hour
+    hour_pass[time].append(int(data[row][7]))
+    
+averages=[]
+for i in range(len(hour_pass)):
+    mean=sum(hour_pass[i])/len(hour_pass[i])
+    averages.append(mean)
 ```
+##### In the above code, the 'pickup_datetime' data was converted from 'str' to 'datetime.hour' using the 'datetime' library.
+##### I created an empty dictionary called 'hour_pass' and added keys to it that ranged from 0 to 23. Therefore, the dictionary's keys stand in for the day's 24 hours, and each key's dictionary value is a list of the number of passengers present at that hour's corresponding key.
+##### Using the entries in the dictionary named "hour_pass". A list called "averages" was created by calculating the average number of people who took a taxi at each hour. 
 
+#### Plotting the chart:
+```python
+import matplotlib.pyplot as plt
+import seaborn as sns
+sns.barplot(x=list(hour_pass.keys()),y=averages)
+plt.grid(axis='y')
+plt.xlabel("Hour of the Day")
+plt.ylabel("Average Passenger Count")
+plt.title("Average Number of Passengers by Hour")
+plt.show()
+```
+#### output:
+![image](https://github.com/CHANDRAKANTHGONUGUNTLA/Big_Data_Inspection-NYC_Taxi_Trips/assets/97879005/3a90e7a5-4d22-4153-a24c-1ad8d001647b)
+#### Description:
+* According to the graph, the average number of passengers progressively declined from the fourth hour and reached its lowest point at the sixth hour. Thereafter, the number of passengers gradually began to rise until the fifteenth hour, with the bar being stationary between the fifteenth and twentieth hours.
+* The highest average number of passengers was seen between the hours of 0–3 and 21–23.
+
+  ---
+  ### 10. Create a new CSV file which has only one out of every thousand rows.
+  
 
 
