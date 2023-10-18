@@ -65,7 +65,7 @@ Total Number of rows in the dataset (excluding attributes):  15285049
 ```
 #### Description:
 * The dataset contains 15285050 rows in total. Attribute names are the first item in the list. Therefore, the dataset has 15285049 rows overall, excluding the initial row.
-* ---
+ ---
 ### 2. What are the field names?  Give descriptions for each field.
 #### This code prints the field names
 ```python
@@ -125,9 +125,77 @@ Data type and length of each field:
 * **pickup_latitude**: DECIMAL(8,6)
 * **dropoff_longitude**: DECIMAL(8,6)
 * **dropoff_latitude**: DECIMAL(8,6)
-  
+---  
 ### 5. What is the geographic range of your data (min/max - X/Y)?
 Plot this (approximately on a map)
+```python
+import csv
+pickup_lat_min = 90
+pickup_lat_max = -90
+pickup_long_min = 180
+pickup_long_max = -180
+dropoff_lat_min = 90
+dropoff_lat_max = -90
+dropoff_long_min = 180
+dropoff_long_max = -180
+n = 0
+with open('trip_data_5.csv', 'r') as file:
+    r = csv.DictReader(file)
+    for row in r:
+        if n > 0:
+            try:
+                pickup_lat = float(row[' pickup_latitude'])
+                pickup_long = float(row[' pickup_longitude'])
+                dropoff_lat = float(row[' dropoff_latitude'])
+                dropoff_long = float(row[' dropoff_longitude'])
+                if (-74.4 <= pickup_long <= -72.05 and 40.4 <= pickup_lat<= 41.02):
+                    pickup_lat_min = min(pickup_lat_min, pickup_lat)
+                    pickup_lat_max = max(pickup_lat_max, pickup_lat)
+                    pickup_long_min = min(pickup_long_min, pickup_long)
+                    pickup_long_max = max(pickup_long_max, pickup_long)
+                if dropoff_long is not None and (-74.5 <= dropoff_long <= -72.02 and 40.75 <= dropoff_lat<= 41):
+                    dropoff_lat_min = min(dropoff_lat_min, dropoff_lat)
+                    dropoff_lat_max = max(dropoff_lat_max, dropoff_lat)
+                    dropoff_long_min = min(dropoff_long_min, dropoff_long)
+                    dropoff_long_max = max(dropoff_long_max, dropoff_long)
+            except ValueError:
+                continue
+        n+=1
+        if n > 1000000000:
+            break
+print("pickup_latitude_min: " ,pickup_lat_min)
+print("pickup_longitude_min: ",pickup_long_min)
+
+print("pickup_latitude_max: ",pickup_lat_max)
+print("pickup_longitude_max: ",pickup_long_max)
+
+print("dropoff_latitude_min: ",dropoff_lat_min)
+print("dropoff_longitude_min: ",dropoff_long_min)
+
+print("dropoff_latitude_max: ",dropoff_lat_max)
+print("dropoff_longitude_max: ",dropoff_long_max)
+```
+#### output:
+```
+pickup_latitude_min:  40.400002
+pickup_longitude_min:  -74.399635
+pickup_latitude_max:  41.019974
+pickup_longitude_max:  -72.199997
+dropoff_latitude_min:  40.75
+dropoff_longitude_min:  -74.491753
+dropoff_latitude_max:  40.99995
+dropoff_longitude_max:  -72.066666
+```
+
+#### Geographical Map:
+<img width="571" alt="image" src="https://github.com/CHANDRAKANTHGONUGUNTLA/Big_Data_Inspection-NYC_Taxi_Trips/assets/97879005/ba2e4309-1441-4732-961f-12a14f70e29e">
+
+#### Description:
+* The longitude and latitude section of the dataset has a lot of irrelevant data (Null values and Zeros) that is confusing the decision.
+* Since it is nearly impossible for a taxi to travel to those coordinates for pickup or drop-off due to the vast disparity in the coordinates, we can assume and fix the maximum radius of New York City.
+
+
+---
 ### 6. What is the average computed trip distance? (You should use Haversine Distance)
 #### created a function 'haversine' which takes longitudes and latitudes values as input and returns the Average trip distance (haversine)
 ```python
@@ -187,12 +255,37 @@ for value in average_distance:
 * The code is not supported by my PC and takes a long time to run. I therefore constructed a new list and added the data that is within the boundary as an alternative to this procedure.
 * There are no outliers (data) below the lower limits.
 * The length of the data decreased from 15285010 to 13964486.
-###### Plotting the graph of average computed trip distance
+##### Plotting the graph of average computed trip distance in two ways
+###### I) Using the matplotlib library
 ```python
+import matplotlib.pyplot as plt
 
+num_bins = 50  # Experimenting with this value
+plt.hist(cleaned_data, bins=num_bins, edgecolor='k', range=(0.0, 5.02))
+plt.xlabel('Average Distance')
+plt.ylabel('Frequency')
+plt.title('Histogram Plot')
+plt.show()
 ```
 #### output:
+![image](https://github.com/CHANDRAKANTHGONUGUNTLA/Big_Data_Inspection-NYC_Taxi_Trips/assets/97879005/7d6334ea-3636-4c2c-9e41-bdde8357e2a8)
 
+######  II) Using the Seaborn library 
+```python
+import seaborn as sns
+
+sns.histplot(data=cleaned_data)
+plt.xlabel('Average Distance')
+plt.ylabel('Frequency')
+plt.title('Histogram Plot')
+plt.show()
+```
+#### output:
+![image](https://github.com/CHANDRAKANTHGONUGUNTLA/Big_Data_Inspection-NYC_Taxi_Trips/assets/97879005/19d5a88f-cf9b-484c-a378-48bd4488bada)
+#### Description:
+* In the first chart, the range and bins were specified. Consequently, only 5.02 is possible for the x values. There are no bins or ranges in the second graph.
+* After viewing the two charts, we may conclude that the majority of the data falls between 0 and 1.
+* The data is right skewed
 ---
 ### 7. What are the distinct values for each field? (If applicable)
 #### For iterations, I used a "for" loop in the code below. Then save each value in a list titled "unique". I estimated the 'length' of the data after removing the repetitive values using 'set'.
@@ -412,4 +505,3 @@ plt.show()
 * The value of "average" is influenced by the volume of data.
 * The passenger count is higher at [1, 3, 4] subset data, while the overall data is balanced.
 * The maximum is in the 4th hour, but after that, there is a sharp fall in the average in both figures.
-
