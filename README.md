@@ -157,11 +157,43 @@ for row in range(1,len(data)):
         
         average_distance.append(round(ans,ndigits=2))
 ```
+###### The data has a lot of outliers that can easily fool the graph. So, initially, using the statistical procedure known as "INTER QUARTILE RANGE," remove the outliers.
+```python
+average_distance=sorted(average_distance)
+
+mean=sum(average_distance)/len(average_distance)
+
+median=average_distance[int(len(average_distance)/2)]
+
+Q1=average_distance[len(average_distance)//4]
+
+Q3=average_distance[(len(average_distance)//4)*3]
+
+IQR= Q3-Q1
+
+lower = Q1-1.5*IQR
+higher= Q3+1.5*IQR
+````
+```python
+cleaned_data=[]
+for value in average_distance:
+    if value <= higher or value >= lower:
+        cleaned_data.append(value)
+```
+#### Description:
+* Calculate the average distance's mean and median first, followed by the values for Quartile 1 and Quartile 3.
+* IQR = Quartile 3 - Quartile 1
+* Determined the data's lowest and upper limits. And then I eliminated the outliers from the list of "average_distance" values.
+* The code is not supported by my PC and takes a long time to run. I therefore constructed a new list and added the data that is within the boundary as an alternative to this procedure.
+* There are no outliers (data) below the lower limits.
+* The length of the data decreased from 15285010 to 13964486.
 ###### Plotting the graph of average computed trip distance
+```python
 
+```
+#### output:
 
-
-
+---
 ### 7. What are the distinct values for each field? (If applicable)
 #### For iterations, I used a "for" loop in the code below. Then save each value in a list titled "unique". I estimated the 'length' of the data after removing the repetitive values using 'set'.
 ```python
@@ -309,8 +341,75 @@ plt.show()
 * According to the graph, the average number of passengers progressively declined from the fourth hour and reached its lowest point at the sixth hour. Thereafter, the number of passengers gradually began to rise until the fifteenth hour, with the bar being stationary between the fifteenth and twentieth hours.
 * The highest average number of passengers was seen between the hours of 0–3 and 21–23.
 
-  ---
-  ### 10. Create a new CSV file which has only one out of every thousand rows.
-  
+---
+### 10. Create a new CSV file which has only one out of every thousand rows.
+```python
+  import csv
+file ='trip_data_5.csv'
+f = open(file,'r')
+reader = csv.reader(f)
+with open('subset_data.csv','w') as f1:
+    f1.write('')
 
+with open('subset_data.csv','a') as f1:
+    writer = csv.writer(f1, delimiter=',', lineterminator='\n')
+    header = next(reader)
+    writer.writerow(header)
+    for i,row in enumerate(reader):
+        if i > 0:
+            i += 1
+            if i % 1000 == 0:
+                writer.writerow(row)
+        if i > 1000000000:
+            break
+```
+#### output:
+* * With every 1000 rows, we receive a subset of the original dataset. The subset includes 15286 rows total, including the header, while the original data set has 15285050 rows.
+
+---
+### 11. Repeat step 9 with the reduced dataset and compare the two charts.
+##### Finding the length of the subset_data:
+```python
+with open('subset_data.csv', 'r') as file:
+    csv = csv.reader(file)
+    subset_data = list(csv)
+
+print(len(subset_data))
+```
+#### output:
+```
+15286
+```
+###### Repeating step 9 with the subset data.
+```python
+hour_pass={}
+for i in range(24):
+    hour_pass[i]=[]
+
+for row in range(1,len(subset_data)):
+    time=datetime.strptime(subset_data[row][5],'%Y-%m-%d %H:%M:%S').hour
+    hour_pass[time].append(int(subset_data[row][7]))
+    
+averages=[]
+for i in range(len(hour_pass)):
+    mean=sum(hour_pass[i])/len(hour_pass[i])
+    averages.append(mean)
+```
+```python
+sns.barplot(x=list(hour_pass.keys()),y=averages)
+plt.grid(axis='y')
+plt.xlabel("Hour of the Day")
+plt.ylabel("Average Passenger Count")
+plt.title("Average Number of Passengers by Hour (subset data)")
+plt.show()
+```
+#### output:
+![image](https://github.com/CHANDRAKANTHGONUGUNTLA/Big_Data_Inspection-NYC_Taxi_Trips/assets/97879005/9126853e-7b35-4b7d-b839-1b852c869fc5)
+
+#### Description:
+* The average number of passengers at [1, 3, 4] hours is larger when compared to the total data. due to a lack of sufficient data.
+* We can observe that this chart is not as consistent as the one before it because the bar does not precisely increase or shrink consistently at every hourly interval.
+* The value of "average" is influenced by the volume of data.
+* The passenger count is higher at [1, 3, 4] subset data, while the overall data is balanced.
+* The maximum is in the 4th hour, but after that, there is a sharp fall in the average in both figures.
 
