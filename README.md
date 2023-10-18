@@ -129,7 +129,38 @@ Data type and length of each field:
 ### 5. What is the geographic range of your data (min/max - X/Y)?
 Plot this (approximately on a map)
 ### 6. What is the average computed trip distance? (You should use Haversine Distance)
-Draw a histogram of the trip distances binned anyway you see fit.
+#### created a function 'haversine' which takes longitudes and latitudes values as input and returns the Average trip distance (haversine)
+```python
+from math import radians, cos, sin, asin, sqrt
+
+def haversine(lon1, lat1, lon2, lat2):
+   
+    # convert decimal degrees to radians 
+    lon1, lat1, lon2, lat2 = map(radians, [lon1, lat1, lon2, lat2])
+
+    # haversine formula 
+    dlon = lon2 - lon1 
+    dlat = lat2 - lat1 
+    a = sin(dlat/2)**2 + cos(lat1) * cos(lat2) * sin(dlon/2)**2
+    c = 2 * asin(sqrt(a)) 
+    r = 3958.8 # Radius of earth in kilometers. Use 3958.8 for miles.
+    return c * r
+```
+##### removing the null values from the data, using the function "haversine," and saving all of the returned values in a new list called "average_distance"
+```python
+average_distance=[]
+for row in range(1,len(data)):
+    if data[row][10]=='' or data[row][11]=='' or data[row][12]=='' or data[row][13]=='':
+        continue
+    else:
+        ans= haversine(float(data[row][10]),float(data[row][11]),float(data[row][12]),float(data[row][13]))
+        
+        average_distance.append(round(ans,ndigits=2))
+```
+###### Plotting the graph of average computed trip distance
+
+
+
 
 ### 7. What are the distinct values for each field? (If applicable)
 #### For iterations, I used a "for" loop in the code below. Then save each value in a list titled "unique". I estimated the 'length' of the data after removing the repetitive values using 'set'.
