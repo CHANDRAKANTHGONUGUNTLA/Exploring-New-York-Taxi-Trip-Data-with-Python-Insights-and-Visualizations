@@ -2,7 +2,7 @@
 <p align="center"><strong><h1>NYC Taxi Trip Data</h1></strong></p>
 
 ## This project is completely done and analyzed in Python language. I also analyzed the same NYC taxi Data using Tableau. Here is the link to the repository of the Tableau project
-
+- https://github.com/CHANDRAKANTHGONUGUNTLA/NYC-Taxi-Insights-Visualizing-Tableau-Dashboard/blob/main/README.md
 ## For a detailed overview of the Python analysis and code implementation, please explore the contents of this repository.
 
 #### This repository describes a dataset that includes details about taxi travel in New York City. The 'list of attributes' utilized in the data is as follows:
