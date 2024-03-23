@@ -1,5 +1,10 @@
-# NYC Taxi Trip Data 
-##
+
+<p align="center"><strong><h1>NYC Taxi Trip Data</h1></strong></p>
+
+## This project is completely done and analyzed in Python language. I also analyzed the same NYC taxi Data using Tableau. Here is the link to the repository of the Tableau project
+
+## For a detailed overview of the Python analysis and code implementation, please explore the contents of this repository.
+
 #### This repository describes a dataset that includes details about taxi travel in New York City. The 'list of attributes' utilized in the data is as follows:
 * ['medallion', ' hack_license',' vendor_id',' rate_code',' store_and_fwd_flag',' pickup_datetime',' dropoff_datetime',' passenger_count',' trip_time_in_secs',' trip_distance',' pickup_longitude',' pickup_latitude',' dropoff_longitude', 'dropoff_latitude']
 #### These attributes give the user a lot of options for in-depth analysis and decision-making on the data.
